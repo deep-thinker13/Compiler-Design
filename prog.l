@@ -9,6 +9,7 @@ int extract(char *s);
 digit	[0-9]
 letter	[a-zA-Z]
 id	{letter}({letter}|{digit})*
+pack_id	[a-z]+(\.[a-z]+)+
 digits	{digit}+
 opFraction	(\.{digits})?
 opExponent	([Ee][+-]?{digits})?
@@ -59,8 +60,9 @@ else	{yylval.string=strdup(yytext);return T_ELSE;}
 do	{yylval.string=strdup(yytext);return T_DO;}
 while	{yylval.string=strdup(yytext);return T_WHILE;}
 exit	{return T_EXIT;}
+{pack_id}	{yylval.string=strdup(yytext);return T_PID;}
 {id}	{yylval.string=strdup(yytext);return T_ID;}
-\[{digits}?\]	{yylval.integer=extract(yytext);return T_DIMS;}
+\[{digits}?\]	{yylval.number=extract(yytext);return T_DIMS;}
 {digits}	{yylval.number=atoi(yytext);return T_NUM;}
 {real}	{yylval.real=atof(yytext);return T_REAL;}
 [\n|\t|' ']	;
@@ -75,8 +77,9 @@ if(len == 2)
 	return -1;
 else
 {
+	s[len-1] = '\0';
 	new = s+1;
-	new[len-2] = '\0';
+	
 	i = atoi(new);
 	return i;
 }
