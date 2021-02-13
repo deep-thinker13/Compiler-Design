@@ -6,6 +6,7 @@ void yyerror(char *s);
 int extract(char *s);
 #include "y.tab.h"
 %}
+
 digit	[0-9]
 letter	[a-zA-Z]
 id	{letter}({letter}|{digit})*
@@ -15,21 +16,24 @@ opFraction	(\.{digits})?
 opExponent	([Ee][+-]?{digits})?
 real	{digits}{opFraction}{opExponent}
 %%
+"/*"[^"*/"]*"*/"    ;
 "//"[^\n]*	;
-"+="	{yylval.string=strdup(yytext);return T_PE;}
-"-="	{yylval.string=strdup(yytext);return T_ME;}
-"/="	{yylval.string=strdup(yytext);return T_DE;}
-"*="	{yylval.string=strdup(yytext);return T_MULE;}
-"%="	{yylval.string=strdup(yytext);return T_PERCE;}
-"++"	{yylval.string=strdup(yytext);return T_INC;}
-"--"	{yylval.string=strdup(yytext);return T_DEC;}
-"&&"	{yylval.string=strdup(yytext);return T_AND;}
-"||"	{yylval.string=strdup(yytext);return T_OR;}
-"!="	{yylval.string=strdup(yytext);return T_NE;}
-"<="	{yylval.string=strdup(yytext);return T_LTE;}
-">="	{yylval.string=strdup(yytext);return T_GTE;}
-"=="	{yylval.string=strdup(yytext);return T_EE;}
-"^="	{yylval.string=strdup(yytext);return T_EXE;}
+"+="    {yylval.string=strdup(yytext);return T_PE;}
+"-="    {yylval.string=strdup(yytext);return T_ME;}
+"/="    {yylval.string=strdup(yytext);return T_DE;}
+"*="    {yylval.string=strdup(yytext);return T_MULE;}
+"%="    {yylval.string=strdup(yytext);return T_PERCE;}
+"&="    {yylval.string=strdup(yytext);return T_ANDE;}
+"^="    {yylval.string=strdup(yytext);return T_XORE;}
+"|="    {yylval.string=strdup(yytext);return T_ORE;}
+"++"    {yylval.string=strdup(yytext);return T_INC;}
+"--"    {yylval.string=strdup(yytext);return T_DEC;}
+"&&"    {yylval.string=strdup(yytext);return T_AND;}
+"||"    {yylval.string=strdup(yytext);return T_OR;}
+"!="    {yylval.string=strdup(yytext);return T_NE;}
+"<="    {yylval.string=strdup(yytext);return T_LTE;}
+">="    {yylval.string=strdup(yytext);return T_GTE;}
+"=="    {yylval.string=strdup(yytext);return T_EE;}
 "new"	{yylval.string=strdup(yytext);return T_NEW;}
 import	{yylval.string=strdup(yytext);return T_IMPORT;}
 package	{yylval.string=strdup(yytext);return T_PACKAGE;}
