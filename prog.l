@@ -4,17 +4,19 @@
 #include<stdlib.h>
 void yyerror(char *s);
 int extract(char *s);
+char* strextract(char *s);
 #include "y.tab.h"
 %}
 
 digit	[0-9]
-letter	[a-zA-Z]
+letter	[a-zA-Z_]
 id	{letter}({letter}|{digit})*
 pack_id	[a-z]+(\.[a-z]+)+
 digits	{digit}+
 opFraction	(\.{digits})?
 opExponent	([Ee][+-]?{digits})?
 real	{digits}{opFraction}{opExponent}
+%option yylineno
 %%
 "/*"[^"*/"]*"*/"    ;
 "//"[^\n]*	;
@@ -23,11 +25,6 @@ real	{digits}{opFraction}{opExponent}
 "/="    {yylval.string=strdup(yytext);return T_DE;}
 "*="    {yylval.string=strdup(yytext);return T_MULE;}
 "%="    {yylval.string=strdup(yytext);return T_PERCE;}
-"&="    {yylval.string=strdup(yytext);return T_ANDE;}
-"^="    {yylval.string=strdup(yytext);return T_XORE;}
-"|="    {yylval.string=strdup(yytext);return T_ORE;}
-"++"    {yylval.string=strdup(yytext);return T_INC;}
-"--"    {yylval.string=strdup(yytext);return T_DEC;}
 "&&"    {yylval.string=strdup(yytext);return T_AND;}
 "||"    {yylval.string=strdup(yytext);return T_OR;}
 "!="    {yylval.string=strdup(yytext);return T_NE;}
@@ -43,6 +40,7 @@ private	{yylval.string=strdup(yytext);return T_PRIVATE;}
 protected	{yylval.string=strdup(yytext);return T_PROTECTED;}
 static	{yylval.string=strdup(yytext);return T_STATIC;}
 void	{yylval.string=strdup(yytext);return T_VOID;}
+final	{yylval.string=strdup(yytext);return T_FINAL;}
 main	{yylval.string=strdup(yytext);return T_MAIN;}
 const	{yylval.string=strdup(yytext);return T_CONST;}
 int	{yylval.string=strdup(yytext);return T_INT;}
@@ -57,8 +55,8 @@ null	{yylval.string=strdup(yytext);return T_NULL;}
 break	{yylval.string=strdup(yytext);return T_BREAK;}
 continue	{yylval.string=strdup(yytext);return T_CONTINUE;}
 return	{yylval.string=strdup(yytext);return T_RETURN;}
-System.out.println	{yylval.string=strdup(yytext);return T_PRINTLN;}
-System.out.print	{yylval.string=strdup(yytext);return T_PRINT;}
+System\.out\.println	{yylval.string=strdup(yytext);return T_PRINTLN;}
+System\.out\.print	{yylval.string=strdup(yytext);return T_PRINT;}
 if/"(".*")"	{yylval.string=strdup(yytext);return T_IF;}
 else	{yylval.string=strdup(yytext);return T_ELSE;}
 do	{yylval.string=strdup(yytext);return T_DO;}
@@ -66,13 +64,23 @@ while	{yylval.string=strdup(yytext);return T_WHILE;}
 exit	{return T_EXIT;}
 {pack_id}	{yylval.string=strdup(yytext);return T_PID;}
 {id}	{yylval.string=strdup(yytext);return T_ID;}
+\"[^\n]*\"	{yylval.string=strextract(yytext);return T_STR;}
 \[{digits}?\]	{yylval.number=extract(yytext);return T_DIMS;}
 {digits}	{yylval.number=atoi(yytext);return T_NUM;}
 {real}	{yylval.real=atof(yytext);return T_REAL;}
+\+/\"    {yylval.string=strdup(yytext);return T_PLUS;}
 [\n|\t|' ']	;
 .	return *yytext;
 %%
 
+
+char* strextract(char *s)
+{
+int len = strlen(s);
+s[len-1] = '\0';
+char* new = s+1;
+return new;
+}
 int extract(char *s)
 {
 int len = strlen(s),i;
