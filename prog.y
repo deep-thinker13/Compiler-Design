@@ -1,10 +1,11 @@
 %{
 #include<stdio.h>
 #include<stdlib.h>
-int yylineno;
+extern int yylineno;
 extern FILE *yyin;
 int yylex();
 void yyerror(char *s);
+
 
 
 %}
@@ -19,7 +20,7 @@ void yyerror(char *s);
 
 %token <number> T_NUM T_DIMS
 %token <real> T_REAL
-%token <string> T_ID T_FLOAT T_INT T_IMPORT T_DOUBLE T_BOOLEAN T_STRING T_CHAR T_IF T_ELSE T_DO T_WHILE T_RETURN T_PACKAGE T_CLASS T_PUBLIC T_PRIVATE T_PROTECTED T_STATIC T_VOID T_MAIN T_CONST T_TRUE T_FALSE T_NULL T_BREAK T_CONTINUE T_PRINTLN T_PRINT T_EXIT T_PE T_ME T_DE T_MULE T_PERCE T_AND T_OR T_NE T_GTE T_LTE T_EE T_NEW T_PID T_FINAL T_STR
+%token <string> T_ID T_FLOAT T_INT T_IMPORT T_DOUBLE T_BOOLEAN T_STRING T_CHAR T_IF T_ELSE T_DO T_WHILE T_RETURN T_PACKAGE T_CLASS T_PUBLIC T_PRIVATE T_PROTECTED T_STATIC T_VOID T_MAIN T_CONST T_TRUE T_FALSE T_NULL T_BREAK T_CONTINUE T_PRINTLN T_PRINT T_EXIT T_PE T_ME T_DE T_MULE T_PERCE T_AND T_OR T_NE T_GTE T_LTE T_EE T_NEW T_PID T_FINAL T_STR T_PLUS
 %type <string> Type 
 //%type <number> Exp
 
@@ -27,7 +28,7 @@ void yyerror(char *s);
 %%
 
 Prog:
-	 Package Import Classes 
+	 Package Import Classes
 	;
 
 Package:
@@ -60,8 +61,10 @@ Modifier2:
 
 Classes:
 
-	 Modifier T_CLASS T_ID '{' ClassBody '}' Classes 
-	|{printf("valid"); YYACCEPT;} 
+	 Modifier T_CLASS T_ID '{' ClassBody '}' Classes
+	|Modifier error T_ID '{' ClassBody '}' Classes
+	|Modifier T_CLASS error '{' ClassBody '}' Classes
+	|{fprintf(stderr, "valid"); YYACCEPT;} 
 	;
 
 ClassBody:
@@ -78,6 +81,7 @@ MethodDec:
 	 Modifier Type T_ID '(' ParameterList ')' '{' Statements '}'
 	|Modifier T_VOID  T_ID '(' ParameterList ')' '{' Statements '}'
 	|Modifier T_VOID  T_MAIN '(' T_STRING T_ID T_DIMS ')' '{' Statements '}'
+	|error
 	;
 
 ParameterList:
@@ -90,26 +94,27 @@ ParameterList:
 Statements:
 	 Statements Statement
 	|Statement
+
 	;
 Statement:
-	 Declr ';'
+	 Declr ';' 
 	|Assign ';'
 	|T_IF '(' Cond ')' '{' Statements '}' T_ELSE '{' Statements '}'
+	//|T_IF error '}'  //'(' Cond ')' '{' Statements '}' T_ELSE '{' Statements '}'
 	|T_DO '{' Statements '}' T_WHILE '(' Cond ')' ';'
 	|T_RETURN Exp ';'
 	|T_PRINTLN '(' PrintBlock ')' ';'
 	|T_PRINT '(' PrintBlock ')' ';'
+	|error
 	;
 
 PrintBlock:
-	 PrintArgs '&' PrintBlock
-	|PrintArgs 
-	;
-PrintArgs:
-	
-	T_STR
+	 String '+' Exp
+	|Exp T_PLUS String
 	|Exp
+	|String
 	;
+
 Declr:
 	 Type ListVar
 	;
@@ -137,7 +142,7 @@ X:
 	|T_ID T_DIMS T_DIMS
 	;
 Assign:
-	 T_ID '=' Exp
+	 T_ID '=' PrintBlock
 	|T_ID T_PE ArithExp
 	|T_ID T_ME ArithExp
 	|T_ID T_MULE ArithExp
@@ -145,19 +150,20 @@ Assign:
 	|T_ID '=' T_NEW Type T_DIMS {if($5==-1){yyerror("error");}}
 	|T_ID T_DIMS '=' Exp {if($2==-1){yyerror("error");}}
 	|T_ID T_PERCE ArithExp
-	|T_ID '=' Strings
+	|
 	;
 
-Strings:
-	Strings '+' String
+/*Strings:
+	Strings T_PLUS String
 	|String 
-	;
+	;*/
 String:
 	 T_STR
 	;
 	
 Cond:
 	 LogExp
+	|error
 	;
 Exp: 
 	LogExp
@@ -187,7 +193,6 @@ Eqop:
 	;
 RelExp:
 	ArithExp Relop ArithExp
-	|
 	;
 Relop:
 	'<'
@@ -218,9 +223,12 @@ G:
 
 
 %%
+
+
+
 void yyerror(char *s)
 {
-printf("%s in line %d\n",s,yylineno);
+    fprintf(stderr, "%s in line %d\n",s,yylineno);
 }
 int yywrap()
 {
@@ -228,10 +236,12 @@ int yywrap()
 }
 int main()
 {
-	char fname[100];
-	printf("\nEnter the name of file\n");
-	scanf("%s",fname);
-	yyin=fopen(fname,"r+");
-	yyparse();
+
+    char fname[100];
+    fprintf(stderr, "\nEnter the name of file\n");
+    scanf("%s",fname);
+    yyin=fopen(fname,"r+");
+
+    yyparse();
 return 0;
 }
