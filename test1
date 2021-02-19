@@ -1,0 +1,61 @@
+package java.java;
+import all.modules;
+
+public class a
+{
+	final int 1global_var = l*q*p;
+	public static void main(String args[])
+	{
+		int 1var1 = 1;
+		System.out.print(1);
+	}
+	public final int func1(int p1 ,int p2)
+	{
+
+		int 1z = 1x+y*z;
+		if(t1==t2 && t3==t4)
+		{
+			int t5 = 1;
+		}
+		else
+		{
+			//int[][] t6;
+			int 1t18 = 1;
+		}
+
+		int 1t7 = ((t8==t9)||(t10==1)&&(t11<=1));
+
+
+		System.out.println(sid+ "a");
+
+		 
+	}
+	/* this 
+	is 
+	multi line comment */
+	public int func2()
+	{
+		int t13 ;
+	}
+	
+}
+class 1b
+{
+	int var3 = 20;
+	int func3(int p3,float p4)
+	{
+		int x,y,z;
+		do
+		{
+			x = 1;
+		}
+		while(t==1);
+	}
+}
+
+class c
+{
+int 1c3;
+}
+
+

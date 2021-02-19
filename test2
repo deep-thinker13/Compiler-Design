@@ -1,0 +1,42 @@
+class a
+{
+	public static void main(String args[])
+	{
+		int time = 20;
+		if (time < 18) 
+		{
+  			System.out.println("Good day.");
+		} 
+		else 
+		{
+  			System.out.println("Good evening.");
+		}
+	}
+	int dowhilefunc(int param)
+	{
+		int i=1;  
+    		do{  
+        	System.out.println(i);  
+    			i+=1;  
+    		}while(i<=10);
+	}
+	int arrfunc(int n)
+	{
+		float f = 1;
+		boolean t = true;
+		int arr[];
+		arr= new int[20];
+		int[] arr2 = new int[10];
+		
+	}
+		
+				
+}
+class b
+{
+	int func3(int param3)
+	{
+		int x = (a*b+c/d)%l;
+	}
+}
+	

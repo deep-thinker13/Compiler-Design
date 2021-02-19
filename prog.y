@@ -103,7 +103,7 @@ ClassBody:
 	;
 
 GlobalVar:
-	 Modifier Declr ';'
+	 Modifier Declr ';' 
 	;
 
 MethodDec:
@@ -130,7 +130,7 @@ Statements:
 
 	;
 Statement:
-	 Declr ';' 
+	 Declr ';' {yyerrok;}
 	|Assign ';'
 	|T_IF '(' Cond ')' '{' Statements '}' T_ELSE '{' Statements '}'
 	|T_DO '{' Statements '}' T_WHILE '(' Cond ')' ';'
@@ -151,6 +151,7 @@ PrintBlock:
 
 Declr:
 	 Type ListVar
+	|error 
 	;
 
 Type:
