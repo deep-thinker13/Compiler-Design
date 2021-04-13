@@ -1,0 +1,30 @@
+
+class a
+{
+	public static void main(String args[])
+	{
+		int n = 5;
+		int fact = 1;
+		int b = 2,i;
+		b = 3;
+		int a = b * b;
+		do
+		{
+			i = a + n;
+			fact = fact * n;
+			n -= i;
+		}
+		while(0>1);
+		if(1>0)
+		{
+			int t = 10*20/30-40;
+		}
+		else
+		{
+			int y = t*20;
+		}
+		int z = 0;
+	}				
+}
+
+	
