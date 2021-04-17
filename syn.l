@@ -2,8 +2,7 @@
 #include<stdio.h>
 #include<string.h>
 #include<stdlib.h>
-#include"header.c"
-#define YYSTYPE YACC
+
 void yyerror(char *s);
 int extract(char *s);
 char* strextract(char *s);
@@ -38,6 +37,7 @@ real	{digits}{opFraction}{opExponent}
 
 %option yylineno
 %%
+
 "/*"([^*]|\*+[^*/])*\*+"/" ;
 "//"[^\n]*	;
 "+="    {yylval.string=strdup(yytext);printf("%s\t%s\n","T_PE",yytext);return T_PE;}
